@@ -1,11 +1,11 @@
-# 📐 DAX Measures Documentation
+#  DAX Measures Documentation
 
 This document lists **all DAX measures** used in the *HR Analytics – Employee Attrition Dashboard* (Atlas Labs).  
 Each measure includes a short **business meaning** and, when useful, a **technical note**.
 
 ---
 
-## 👥 Employee Count Measures
+##  1-Employee Count Measures
 
 ### TotalEmployees
 **Business:** Total number of unique employees.
@@ -36,7 +36,7 @@ CALCULATE(
 
 ---
 
-## 📉 Attrition Measures
+##  2-Attrition Measures
 
 ### % Attrition Rate
 **Business:** Share of employees who left (inactive / total).
@@ -75,7 +75,7 @@ DIVIDE([InactiveEmployeesDate], [TotalEmployeesDate])
 
 ---
 
-## 💰 Compensation
+##  3-Compensation
 
 ### AverageSalary
 **Business:** Average salary in the current filter context.
@@ -86,7 +86,7 @@ AVERAGE(DimEmployee[Salary])
 
 ---
 
-## 🙂 Satisfaction Measures
+##  4-Satisfaction Measures
 
 ### JobSatisfaction
 **Business:** Job satisfaction score (from performance rating fact).
@@ -137,7 +137,7 @@ CALCULATE(
 
 ---
 
-## ⭐ Performance Rating Measures
+##  5-Performance Rating Measures
 
 ### ManagerRating
 **Business:** Manager evaluation score.
@@ -168,7 +168,7 @@ CALCULATE(
 
 ---
 
-## 🗓️ HR Review Dates
+##  6-HR Review Dates
 
 ### LastReviewDate
 **Business:** Last review date, or a message if no review exists.

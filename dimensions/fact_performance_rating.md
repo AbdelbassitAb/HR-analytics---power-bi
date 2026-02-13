@@ -1,110 +1,71 @@
 # Power Query — `FactPerformanceRating`
 
-This document describes the **Power Query (ETL) steps** applied to the `FactPerformanceRating` table in the *HR Analytics – Employee Attrition Dashboard*.
 
-> Notes  
-> - This table represents the **fact table** of the model.  
-> - It stores employee performance reviews and satisfaction scores.  
-> - It is designed to be analyzed over time and linked to multiple dimensions.
+## 1) Purpose
 
----
-
-## 1) Table role (why this table exists)
-`FactPerformanceRating` is the **central fact table** used to:
-- Track employee performance evaluations
-- Store satisfaction and rating scores
-- Enable time-based analysis (reviews over time)
-- Support individual employee monitoring (Performance Tracker page)
+`FactPerformanceRating` is the main fact table storing employee evaluation data.  
+It supports performance tracking, satisfaction analysis, and time-based review insights.
 
 ---
 
-## 2) Main columns used in the report
-Key fields used in the dashboard:
+## 2) Structure
+
+Key columns:
 - `PerformanceID` (primary key)
-- `EmployeeID` (foreign key → `DimEmployee`)
+- `EmployeeID` (foreign key to `DimEmployee`)
 - `ReviewDate`
-- Satisfaction scores:
-  - `JobSatisfaction`
-  - `EnvironmentSatisfaction`
-  - `RelationshipSatisfaction`
-  - `WorkLifeBalance`
-- Performance ratings:
-  - `SelfRating`
-  - `ManagerRating`
+- `JobSatisfaction`
+- `EnvironmentSatisfaction`
+- `RelationshipSatisfaction`
+- `WorkLifeBalance`
+- `SelfRating`
+- `ManagerRating`
+
+Each row represents one employee review record.
 
 ---
 
-## 3) Power Query transformations (step-by-step)
+## 3) Power Query Processing
 
-### Step A — Load & header normalization
-- Load the performance rating dataset
-- Promote first row to headers
-- Rename columns where necessary for clarity and consistency
+No manual transformations were applied.
 
-**Why:** ensures clean and readable field names for modeling and DAX.
+The table was:
+- Loaded directly from the source dataset
+- Automatically typed by Power BI
+- Integrated into the model without additional cleaning
 
----
-
-### Step B — Data types standardization
-Apply appropriate data types:
-- `PerformanceID` → Whole number
-- `EmployeeID` → Whole number
-- `ReviewDate` → Date
-- Satisfaction and rating columns → Whole number
-
-**Why:** numeric typing is required for aggregations and mapping to rating/satisfaction dimensions.
+The dataset was already structured and analysis-ready.
 
 ---
 
-### Step C — Data quality checks
-Typical checks applied:
-- Ensure `EmployeeID` is never null
-- Validate that satisfaction and rating values fall within expected ranges (1–5)
-- Remove duplicate rows if any exist at the `(EmployeeID, ReviewDate)` level
+## 4) Data Model Relationships
 
-**Why:** avoids incorrect aggregations and duplicated evaluations.
+Relationships were created between:
+- `FactPerformanceRating[EmployeeID]` → `DimEmployee[EmployeeID]`
+- `FactPerformanceRating[ReviewDate]` → `DimDate[Date]` (depending on analysis setup)
 
----
-
-### Step D — Keep raw scores (no business logic)
-- Raw numeric values (1–5) are kept as-is
-- No textual mapping (e.g., “Satisfied”, “Excellent”) is done in Power Query
-
-**Why:**  
-Mapping is handled later through:
+Inactive relationships are used with:
 - `DimRatingLevel`
 - `DimSatisfiedLevel`
-using **DAX + USERELATIONSHIP**, which keeps the model flexible and scalable.
+
+These are activated in DAX using `USERELATIONSHIP()` when required.
 
 ---
 
-## 4) Output (what this table enables in the dashboard)
-`FactPerformanceRating` enables:
-- Performance and satisfaction tracking per employee
-- Comparison between **SelfRating** and **ManagerRating**
-- Analysis of satisfaction dimensions over time
-- Calculation of:
-  - `JobSatisfaction`
-  - `EnvironmentSatisfaction`
-  - `RelationshipSatisfaction`
-  - `WorkLifeBalance`
-- HR review dates:
-  - `LastReviewDate`
-  - `NextReviewDate`
+## 5) Analytical Contribution
+
+This table enables:
+- Individual employee performance tracking
+- Satisfaction trend analysis
+- Comparison between self and manager ratings
+- Time-based review monitoring
+- Calculation of review-related measures (LastReviewDate, NextReviewDate)
 
 ---
 
-## 5) Good practices applied
-- Clear separation between **facts** and **dimensions**
-- No business logic embedded in Power Query
-- Designed for easy extension (new review dates, new rating dimensions)
-- Clean numeric fields for reliable DAX calculations
+## 6) Design Note
 
----
-
-## 6) Quick checklist (for reviewers / recruiters)
-✅ Proper fact table grain (one row per employee review)  
-✅ Clean foreign key to `DimEmployee`  
-✅ Numeric scores ready for analytical mapping  
-✅ Optimized for time-based analysis  
-
+Keeping evaluations in a dedicated fact table:
+- Preserves a clean star schema
+- Separates measurable events from descriptive attributes
+- Supports scalable analytical modeling

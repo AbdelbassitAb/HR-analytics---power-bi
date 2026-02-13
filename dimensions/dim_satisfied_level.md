@@ -1,26 +1,20 @@
 # Power Query — `DimSatisfiedLevel`
 
-This document describes the **Power Query (ETL) steps** applied to the `DimSatisfiedLevel` table in the *HR Analytics – Employee Attrition Dashboard*.
+This document describes the `DimSatisfiedLevel` table used in the HR Analytics – Employee Attrition Dashboard.
 
-> Notes  
-> - `DimSatisfiedLevel` is a **lookup (dimension) table**.  
-> - It translates numeric satisfaction scores into **business-readable labels**.  
-
----
-
-## 1) Table role (why this table exists)
-`DimSatisfiedLevel` is used to:
-- Convert numeric satisfaction values (e.g., 1–5) into meaningful categories
-- Improve readability of satisfaction-related visuals
-- Support DAX measures using `USERELATIONSHIP`
+## 1) Purpose
+`DimSatisfiedLevel` is a lookup (dimension) table that converts numeric satisfaction scores into readable categories.  
+It improves clarity in satisfaction-related visuals and analysis.
 
 ---
 
-## 2) Main columns
+## 2) Structure
+
+Columns:
 - `SatisfactionID` (primary key, numeric)
 - `SatisfactionLevel` (text label)
 
-**Example values:**
+Example values:
 - 1 → Very Dissatisfied  
 - 2 → Dissatisfied  
 - 3 → Neutral  
@@ -29,65 +23,44 @@ This document describes the **Power Query (ETL) steps** applied to the `DimSatis
 
 ---
 
-## 3) Power Query transformations
+## 3) Power Query Processing
 
-### Step A — Load lookup data
-- Load the satisfaction level dataset
-- Promote headers
-- Rename columns for clarity (`SatisfactionID`, `SatisfactionLevel`)
+No manual transformations were applied.
 
-**Why:** ensures clean and consistent column naming.
+The table was:
+- Loaded directly from the dataset
+- Automatically typed by Power BI
+- Integrated into the model without additional cleaning
 
----
-
-### Step B — Data types
-- `SatisfactionID` → Whole number
-- `SatisfactionLevel` → Text
-
-**Why:** correct typing ensures reliable joins and readable visuals.
+The source data was already clean and properly structured.
 
 ---
 
-### Step C — Data validation
-- Check for duplicate `SatisfactionID`
-- Ensure satisfaction scale consistency (1 to 5)
-- Remove unnecessary columns (if any)
+## 4) Data Model Relationship
 
-**Why:** lookup tables must remain small, clean, and stable.
-
----
-
-## 4) Relationships in the model
-`DimSatisfiedLevel` is linked via **inactive relationships** to:
+Inactive relationships were created between:
+- `DimSatisfiedLevel[SatisfactionID]`
 - `FactPerformanceRating[JobSatisfaction]`
 - `FactPerformanceRating[EnvironmentSatisfaction]`
 - `FactPerformanceRating[RelationshipSatisfaction]`
 - `FactPerformanceRating[WorkLifeBalance]`
 
-These relationships are activated in DAX using:
-- `USERELATIONSHIP()`
+These relationships are activated in DAX using `USERELATIONSHIP()` when required.
 
 ---
 
-## 5) Output (what this table enables)
-`DimSatisfiedLevel` enables:
-- Readable satisfaction levels in dashboards
+## 5) Analytical Contribution
+
+This table enables:
+- Clear display of satisfaction levels in visuals
 - Consistent interpretation of satisfaction scores
-- Cleaner and more maintainable DAX measures
+- Cleaner DAX logic by separating codes from labels
 
 ---
 
-## 6) Good practices applied
-- Small, dedicated lookup table
-- No business logic in Power Query
-- Relationships activated dynamically in DAX
-- Improves dashboard clarity and user understanding
+## 6) Design Note
 
----
-
-## 7) Quick checklist (for reviewers / recruiters)
-✅ Clean satisfaction scale (1–5)  
-✅ Clear business labels  
-✅ Proper use of lookup table  
-✅ Integrated with DAX via USERELATIONSHIP  
-
+Using a separate satisfaction dimension:
+- Keeps the model aligned with star schema principles
+- Avoids duplication of labels
+- Improves scalability and maintainability

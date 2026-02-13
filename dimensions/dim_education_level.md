@@ -1,26 +1,20 @@
 # Power Query — `DimEducationLevel`
 
-This document describes the **Power Query (ETL) steps** applied to the `DimEducationLevel` table in the *HR Analytics – Employee Attrition Dashboard*.
 
-> Notes  
-> - `DimEducationLevel` is a **lookup (dimension) table**.  
-> - It standardizes education level codes into **clear, business-readable categories**.
+## 1) Purpose
 
----
-
-## 1) Table role (why this table exists)
-`DimEducationLevel` is used to:
-- Translate numeric education level codes into meaningful labels
-- Enable education-based segmentation in HR analysis
-- Improve readability and consistency across dashboards
+`DimEducationLevel` is a lookup (dimension) table that translates numeric education codes into readable labels.  
+It enables segmentation of employees and attrition analysis by education level.
 
 ---
 
-## 2) Main columns
+## 2) Structure
+
+Columns:
 - `EducationLevelID` (primary key, numeric)
 - `EducationLevel` (text label)
 
-**Example values:**
+Example values:
 - 1 → No Formal Qualifications  
 - 2 → High School  
 - 3 → Bachelors  
@@ -29,64 +23,41 @@ This document describes the **Power Query (ETL) steps** applied to the `DimEduca
 
 ---
 
-## 3) Power Query transformations
+## 3) Power Query Processing
 
-### Step A — Load lookup data
-- Load the education level dataset
-- Promote headers
-- Rename columns for clarity (`EducationLevelID`, `EducationLevel`)
+No manual transformations were applied.
 
-**Why:** ensures consistent naming and avoids ambiguity in the data model.
+The table was:
+- Loaded directly from the source dataset
+- Automatically typed by Power BI
+- Integrated into the model without additional cleaning
 
----
-
-### Step B — Data types
-- `EducationLevelID` → Whole number
-- `EducationLevel` → Text
-
-**Why:** correct typing is essential for reliable joins and clean report visuals.
+The dataset was already clean and properly structured.
 
 ---
 
-### Step C — Data validation
-- Check for duplicate `EducationLevelID`
-- Ensure values are within the expected range
-- Remove unnecessary or technical columns (if any)
+## 4) Data Model Relationship
 
-**Why:** lookup tables must remain small, stable, and error-free.
-
----
-
-## 4) Relationships in the data model
-`DimEducationLevel` is linked to:
+A one-to-many relationship was created between:
+- `DimEducationLevel[EducationLevelID]`
 - `DimEmployee[EducationLevelID]`
 
-Relationship type:
-- One-to-many (1 → N)
-
-**Why:** allows slicing employee data by education level in reports.
+This allows filtering and analysis of employees by education level.
 
 ---
 
-## 5) Output (what this table enables)
-`DimEducationLevel` enables:
-- Analysis of workforce composition by education level
-- Comparison of attrition rates across education categories
-- Cleaner visuals with readable education labels
+## 5) Analytical Contribution
+
+This table enables:
+- Workforce distribution analysis by education
+- Attrition comparison across education levels
+- Clear labels in visuals instead of numeric codes
 
 ---
 
-## 6) Good practices applied
-- Dedicated lookup table
-- No business logic in Power Query
-- Small and stable dimension for performance
-- Consistent labeling across the model
+## 6) Design Note
 
----
-
-## 7) Quick checklist (for reviewers / recruiters)
-✅ Clean education hierarchy  
-✅ Proper dimension design  
-✅ Simple and maintainable transformations  
-✅ Ready for HR segmentation analysis  
-
+Keeping education levels in a separate dimension follows standard BI modeling practices:
+- Clear separation of dimensions and facts
+- Improved readability
+- Better scalability

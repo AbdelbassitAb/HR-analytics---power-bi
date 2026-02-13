@@ -1,6 +1,6 @@
-# 📊 HR Analytics – Employee Attrition Dashboard (Power BI)
+#  HR Analytics – Employee Attrition Dashboard (Power BI)
 
-## 📌 Project Overview
+##  Project Overview
 This project focuses on analyzing **employee attrition (turnover)** using **Power BI**.  
 The main objective is to help **HR teams and managers** understand why employees leave, identify at-risk populations, and support **data-driven retention strategies**.
 
@@ -10,7 +10,7 @@ The dashboard combines **demographic analysis**, **performance and satisfaction 
 
 ---
 
-## 🎯 Business Objectives
+##  Business Objectives
 - Measure the **overall attrition rate**
 - Monitor attrition **over time**
 - Identify departments and job roles with **high turnover**
@@ -24,7 +24,7 @@ The dashboard combines **demographic analysis**, **performance and satisfaction 
 
 ---
 
-## 🛠️ Tools & Technologies
+##  Tools & Technologies
 - **Power BI Desktop**
 - **DAX** (CALCULATE, FILTER, DISTINCTCOUNT, USERELATIONSHIP, VAR)
 - **Power Query**
@@ -33,7 +33,7 @@ The dashboard combines **demographic analysis**, **performance and satisfaction 
 
 ---
 
-## 🗂️ Dataset Description
+##  Dataset Description
 The dataset represents a fictional company called **Atlas Labs** and includes:
 - Employee demographic data (age, gender, department, job role)
 - Employment details (hire date, salary, attrition status)
@@ -42,11 +42,9 @@ The dataset represents a fictional company called **Atlas Labs** and includes:
 - Rating and satisfaction scales
 - Calendar table for time analysis
 
-📌 *The dataset is provided for educational purposes via DataCamp.*
-
 ---
 
-## 🧱 Data Model
+##  Data Model
 The project uses a **Star Schema** optimized for analytical performance and DAX readability.
 
 ### Tables used:
@@ -71,7 +69,7 @@ The project uses a **Star Schema** optimized for analytical performance and DAX 
 
 ---
 
-## 🧼 Data Preparation (Power Query)
+##  Data Preparation (Power Query)
 Key transformations performed in Power Query:
 - Promotion of headers
 - Standardization of column data types
@@ -85,21 +83,22 @@ Key transformations performed in Power Query:
 
 ---
 
-## 📐 DAX Measures
+##  DAX Measures
 All KPIs and calculations are centralized in a dedicated **_Measures** table.
 
 ### Examples of key measures:
 ```DAX
 TotalEmployees =
-DISTINCTCOUNT(DimEmployee[EmployeeID])```
+DISTINCTCOUNT(DimEmployee[EmployeeID])
+```
 
 ```DAX
 InactiveEmployees =
 CALCULATE(
     [TotalEmployees],
     FILTER(DimEmployee, DimEmployee[Attrition] = "Yes")
-)```
-
+)
+```
 ```DAX
 % Attrition Rate =
 DIVIDE([InactiveEmployees], [TotalEmployees])

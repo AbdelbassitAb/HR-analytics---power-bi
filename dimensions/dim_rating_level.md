@@ -1,26 +1,20 @@
 # Power Query — `DimRatingLevel`
 
-This document describes the **Power Query (ETL) steps** applied to the `DimRatingLevel` table in the *HR Analytics – Employee Attrition Dashboard*.
+This document describes the `DimRatingLevel` table used in the HR Analytics – Employee Attrition Dashboard.
 
-> Notes  
-> - `DimRatingLevel` is a **lookup (dimension) table**.  
-> - It translates numeric performance rating codes into **readable business labels**.  
-
----
-
-## 1) Table role (why this table exists)
-`DimRatingLevel` is used to:
-- Convert numeric rating values (e.g., 1–5) into meaningful categories
-- Improve readability of dashboards and reports
-- Support DAX measures using `USERELATIONSHIP`
+## 1) Purpose
+`DimRatingLevel` is a lookup (dimension) table that converts numeric rating values into readable performance categories.  
+It improves clarity in visuals and supports performance-related analysis.
 
 ---
 
-## 2) Main columns
+## 2) Structure
+
+Columns:
 - `RatingID` (primary key, numeric)
 - `RatingLevel` (text label)
 
-**Example values:**
+Example values:
 - 1 → Unacceptable  
 - 2 → Needs Improvement  
 - 3 → Meets Expectation  
@@ -29,63 +23,42 @@ This document describes the **Power Query (ETL) steps** applied to the `DimRatin
 
 ---
 
-## 3) Power Query transformations
+## 3) Power Query Processing
 
-### Step A — Load lookup data
-- Load the rating level dataset
-- Promote headers
-- Rename columns for clarity (`RatingID`, `RatingLevel`)
+No manual transformations were applied.
 
-**Why:** ensures clean and consistent column naming.
+The table was:
+- Loaded directly from the dataset
+- Automatically typed by Power BI
+- Integrated into the model without additional cleaning
 
----
-
-### Step B — Data types
-- `RatingID` → Whole number
-- `RatingLevel` → Text
-
-**Why:** correct typing ensures reliable joins and clean visuals.
+The source data was already structured and clean.
 
 ---
 
-### Step C — Data validation
-- Check for duplicate `RatingID`
-- Ensure rating scale consistency (1 to 5)
-- Remove unnecessary columns (if any)
+## 4) Data Model Relationship
 
-**Why:** lookup tables must remain small, clean, and stable.
-
----
-
-## 4) Relationships in the model
-`DimRatingLevel` is linked via **inactive relationships** to:
+Inactive relationships were created between:
+- `DimRatingLevel[RatingID]`
 - `FactPerformanceRating[ManagerRating]`
 - `FactPerformanceRating[SelfRating]`
 
-These relationships are activated in DAX using:
-- `USERELATIONSHIP()`
+These relationships are activated in DAX using `USERELATIONSHIP()` when needed.
 
 ---
 
-## 5) Output (what this table enables)
-`DimRatingLevel` enables:
-- Readable performance ratings in visuals
-- Consistent interpretation of rating scores
-- Cleaner DAX measures and model logic
+## 5) Analytical Contribution
+
+This table enables:
+- Clear display of performance categories in visuals
+- Comparison between ManagerRating and SelfRating
+- Cleaner and more maintainable DAX logic
 
 ---
 
-## 6) Good practices applied
-- Small, dedicated lookup table
-- No business logic in Power Query
-- Relationships handled dynamically in DAX
-- Improves dashboard usability
+## 6) Design Note
 
----
-
-## 7) Quick checklist (for reviewers / recruiters)
-✅ Clean rating scale (1–5)  
-✅ Readable business labels  
-✅ Proper use of lookup table  
-✅ Integrated with DAX via USERELATIONSHIP  
-
+Keeping rating levels in a separate dimension:
+- Maintains a clean star schema
+- Avoids hardcoding labels in fact tables
+- Supports scalable model design

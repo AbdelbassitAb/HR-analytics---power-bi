@@ -1,54 +1,38 @@
 # Power Query — `DimDate`
 
-This document describes the **Power Query (ETL) steps** used to create and prepare the `DimDate` table for the *HR Analytics – Employee Attrition Dashboard*.
-
-> Notes  
-> - `DimDate` is a **calendar (date) dimension** created to support time-based analysis.  
-> - It is used in combination with **active and inactive relationships** (via `USERELATIONSHIP` in DAX).  
 
 ---
 
-## 1) Table role (why this table exists)
-`DimDate` enables:
-- Time-based analysis of hiring and attrition
-- Trend analysis (monthly, yearly)
-- Date slicing for HR KPIs
-- Advanced DAX calculations using alternative date contexts
+## 1) Purpose of `DimDate`
+
+`DimDate` is the calendar table used to:
+- enable time-based analysis (Year/Month trends, period comparisons)
+- standardize date filtering across the report
+- support measures that require a date context (for example, attrition over time)
 
 ---
 
-## 2) Date range definition
-The date table covers a range that includes:
-- Minimum employee **HireDate**
-- Maximum **ReviewDate**
-- Additional buffer dates to ensure full coverage
+## 2) How `DimDate` was created in Power Query
 
-**Why:** ensures all time-based visuals work correctly without missing dates.
+The Date dimension was generated directly in Power Query using a calendar creation approach (date range + derived attributes).
 
----
+### Step A — Create a continuous date range
+- Build a continuous list of dates covering the analysis period.
+- The date range should include all relevant business dates used in the model (at minimum, the period covered by employee hire dates and/or review dates).
 
-## 3) Power Query creation steps
+Reason:
+- ensures there are no missing dates, which is important for reliable time series visuals
 
-### Step A — Generate date range
-- Create a continuous list of dates
-- Start date = earliest relevant HR date
-- End date = latest relevant HR date
+### Step B — Convert the list to a table and set data types
+- Convert the list into a table with a single column named `Date`.
+- Set the `Date` column type to Date.
 
-**Why:** guarantees a complete calendar without gaps.
+Reason:
+- correct typing is required for date intelligence and relationships
 
----
-
-### Step B — Convert list to table
-- Convert the date list into a table
-- Rename the column to `Date`
-- Set data type to **Date**
-
----
-
-### Step C — Create calendar attributes
-Add derived columns commonly used in BI reporting:
+### Step C — Add calendar attributes
+Add common attributes such as:
 - `Year`
-- `Month`
 - `MonthNumber`
 - `MonthName`
 - `Quarter`
@@ -56,48 +40,57 @@ Add derived columns commonly used in BI reporting:
 - `DayName`
 - `DayOfWeek`
 
-**Why:** simplifies slicing, grouping, and trend analysis in visuals.
+Reason:
+- these fields simplify reporting (for example, attrition by month) and allow drill-down (Year → Month)
 
 ---
 
-### Step D — Mark as Date Table (Power BI)
-- Mark `DimDate` as the official **Date Table** in Power BI
-- Use the `Date` column as the key
+## 3) Configuration steps in Power BI (outside Power Query)
 
-**Why:** improves time intelligence behavior and ensures correct DAX evaluation.
+After creating the table, the following modeling steps were applied in Power BI.
 
----
+### Step A — Mark `DimDate` as a Date table
+- In Power BI: Table tools → Mark as date table
+- Select the `Date` column as the date column
 
-## 4) Relationships in the data model
-`DimDate` is linked to:
-- `DimEmployee[HireDate]` (inactive relationship)
-- `FactPerformanceRating[ReviewDate]` (active or inactive depending on model)
+Reason:
+- improves time intelligence behavior and prevents ambiguous date handling
+- ensures consistent time filtering and sorting
 
-DAX measures activate the relevant relationship using:
-- `USERELATIONSHIP()`
+### Step B — Create relationships in the data model
+Create relationships between `DimDate[Date]` and the date fields used in the model, depending on the analysis needs, for example:
+- `DimEmployee[HireDate]` (often created as an inactive relationship and activated in measures)
+- `FactPerformanceRating[ReviewDate]` (if review timelines are analyzed)
 
----
-
-## 5) Output (what this table enables in the dashboard)
-`DimDate` enables:
-- Hiring and attrition trends over time
-- Time-based attrition rate calculations
-- Drill-down analysis (Year → Month)
-- Consistent time slicing across all pages
+Reason:
+- allows visuals and measures to use a shared calendar for filtering
+- supports alternative date contexts using `USERELATIONSHIP()` in DAX when needed
 
 ---
 
-## 6) Good practices applied
-- Continuous calendar (no missing dates)
-- No business logic in Power Query
-- Time intelligence handled in DAX
-- Single, centralized date dimension
+## 4) What `DimDate` enables in the report
+
+With `DimDate` created and configured, the report can:
+- display trends over time (monthly/yearly)
+- enable consistent time filtering with slicers
+- support attrition measures evaluated by period (for example, `% Attrition Rate Date`)
+- allow drill-down navigation in time-based visuals
 
 ---
 
-## 7) Quick checklist (for reviewers / recruiters)
-✅ Complete and continuous calendar  
-✅ Marked as Date Table  
-✅ Supports inactive relationships  
-✅ Ready for advanced DAX time analysis  
+## 5) Recommended quality checks
 
+- `DimDate[Date]` contains unique values (no duplicates)
+- The date range covers all relevant business dates (no missing periods)
+- Date columns are correctly typed as Date in Power BI
+- Relationships are correctly set (cardinality and filter direction)
+- The table is marked as a Date table
+
+---
+
+## 6) Summary of best practices applied
+
+- Continuous calendar table (no gaps)
+- Calendar attributes added for analysis and drill-down
+- Date table explicitly marked as a Date table in Power BI
+- Relationships created at the model level and used by time-based measures
