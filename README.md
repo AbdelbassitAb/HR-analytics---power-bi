@@ -126,9 +126,9 @@ RETURN reviewOrHire + 365
 📌 Full list and explanations available in:  
 `/dax_measures/measures.md`
 
-## 📄 Dashboard Pages
+##  Dashboard Pages
 
-### 1️⃣ Overview
+### 1-Overview
 Provides a high-level view of the workforce:
 - Total, active, and inactive employees  
 - Overall attrition rate  
@@ -139,7 +139,7 @@ Provides a high-level view of the workforce:
 
 ---
 
-### 2️⃣ Demographics
+### 2️-Demographics
 Focuses on employee population characteristics:
 - Age distribution and age groups  
 - Gender distribution by age  
@@ -151,7 +151,7 @@ Focuses on employee population characteristics:
 
 ---
 
-### 3️⃣ Performance Tracker
+### 3️-Performance Tracker
 Allows individual employee monitoring:
 - Job satisfaction  
 - Relationship satisfaction  
@@ -169,7 +169,7 @@ Allows individual employee monitoring:
 
 ---
 
-### 4️⃣ Attrition Analysis
+### 4️-Attrition Analysis
 Dedicated to understanding employee turnover:
 - Attrition by department and job role  
 - Attrition by tenure  
@@ -193,7 +193,7 @@ Dedicated to understanding employee turnover:
 
 ---
 
-## 🚀 How to Use the Project
+##  How to Use the Project
 1. Download the `.pbix` file from the `dashboard` folder  
 2. Open it using **Power BI Desktop**  
 3. Navigate through the report pages using slicers and filters  
@@ -219,7 +219,7 @@ HR-Attrition-PowerBI/
 ├── data_model/
 ├── power_query/
 ├── dax_measures/
-└── insights/
+└── business_insights/
 
 
 
